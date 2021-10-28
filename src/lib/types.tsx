@@ -31,6 +31,7 @@ export type newUserReqType={
 }
 
 export type Error ={
+    status:true
     code:number,
     name:string,
     description?:string,
