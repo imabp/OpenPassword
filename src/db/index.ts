@@ -1,7 +1,7 @@
 import { Deta } from 'deta';
 import * as DetaTypeFile from 'deta/dist/types/deta';
 import Drive from 'deta/dist/types/drive';
-import { databaseEntry, returnOnCrudOperation } from '../lib/types';
+import { U_databaseEntry, returnOnCrudOperation } from '../lib/types';
 
 
 class DB {
@@ -52,10 +52,10 @@ class DB {
           }
       }
      else if (operation == 'delete') {
-        const result = await folderData.put(data.id, { data: data.data, contentType: 'text/plain' });
+        const result = await folderData.delete(userid as string);
         return {
           success: true,
-          message: result
+          message: `${userid} deleted succesfully.`
         };
       }
      else if (operation == 'list') {
@@ -78,3 +78,6 @@ class DB {
   }
 
 }
+
+const OrgName = new DB("Tech Phantoms Vault");
+const VaultName = OrgName.createFolder("Tech Phantoms Social Accounts Vault")
