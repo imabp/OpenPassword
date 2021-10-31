@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { newUserReqType, user, vault } from "../../../../src/lib/types";
+import { U_databaseEntry, Error, newUserReqType, UserEntity, VaultEntity, V_databaseEntry } from "../../../../src/lib/types";
 import { idGenerator } from "../../../../src/lib/generators/id";
 import { generateVault } from "../../../../src/lib/generators/vault";
 import { sign } from "../../../../src/lib/jwt";
@@ -7,19 +7,33 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
 
-        const payload: newUserReqType = req.body.payload
+        const payload: newUserReqType = req.body
+
         const userid = idGenerator();
-        const default_vault = generateVault(userid);
+        const default_vault = generateVault(userid,true);
 
-        const newUser: user = createnewuser_tobe_encrypted(userid,payload,default_vault)
-        const encrypt_data = await sign(newUser);
+        const newUser: UserEntity = createnewuser_tobe_encrypted(userid,payload,default_vault)
 
-        const databaseEntry = {
+        const encoded_Userdata = await sign(newUser);
+        const encoded_Vaultdata = await sign(default_vault);
+    
+        if((encoded_Userdata as Error).status===true || (encoded_Vaultdata as Error).status===true)
+            return  res.status(500).end();
+
+        const USERdatabaseEntry:U_databaseEntry = {
             id: userid,
-            data: encrypt_data
+            data: encoded_Userdata as string
+        }
+        const VAULTdatabaseEntry:V_databaseEntry = {
+            id:default_vault.vault_uuid,
+            data:encoded_Vaultdata as string
         }
 
+        /**
+         * Call DB Functions
+         */
 
+        res.status(200).end();
     } catch (e) {
         console.log(e);
         res.status(500).end();
@@ -28,16 +42,20 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 
-const createnewuser_tobe_encrypted = (userid:string, payload:newUserReqType, default_vault:vault): user => {
+const createnewuser_tobe_encrypted = (userid:string, payload:newUserReqType, default_vault:VaultEntity): UserEntity => {
     return {
-        id: userid,
+        user_uuid: userid,
         personals: {
             first_name: payload.first_name,
             last_name: payload.last_name,
-            github: payload.github
+            github: payload.github,
+            email: payload.email,
         },
-        email: payload.email,
-        vaults: [default_vault]
+        vaults: {
+            owner: [default_vault.vault_uuid],
+            read_write_access: [],
+            read_only_access: [],
+        }
     }
 }
 export default createUser;
