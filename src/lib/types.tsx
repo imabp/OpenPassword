@@ -31,9 +31,18 @@ export type newUserReqType={
 }
 
 export type Error ={
-    status:true
+    status:boolean,
     code:number,
     name:string,
     description?:string,
     resolution?:string,
+}
+
+export type databaseEntry = {
+    id: string,
+    data: string
+}
+export type returnOnCrudOperation = {
+    success: boolean,
+    message?:string
 }
