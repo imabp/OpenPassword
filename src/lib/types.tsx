@@ -13,6 +13,9 @@ export type secretType = {
     key: string,
     value: string,
 }
+export type secretsStorage = {
+    hash:string
+}// this hash includes all the secretType[] key value storage.
 
 export type newUserReqType={
     first_name:string,
@@ -31,11 +34,13 @@ export type Error ={
 
 export type U_databaseEntry = {
     id: string,
-    data: string
+    datainJWT: string,
+    U_datainplain:UserEntity
 }
 export type V_databaseEntry = {
     id:string,
-    data:string,
+    datainJWT:string,
+    V_datainplain:VaultEntity
 }
 
 export type returnOnCrudOperation = {
@@ -63,5 +68,5 @@ export type VaultEntity={
         readwrite_members:string[],
         total_members:string[],
     }
-    secrets:secretType[]
+    secrets:secretsStorage
 }
