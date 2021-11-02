@@ -12,6 +12,7 @@ export const generateVault = (userid: string, default_vault: boolean =false): Va
     const id = idGenerator();
     const memberIDs = [userid];
     const store = [emptySecret]
+
     const returnData = {
         vault_uuid: id,
         default_vault: default_vault as boolean,
