@@ -5,7 +5,7 @@ import Drive from 'deta/dist/types/drive';
 import { U_databaseEntry, returnOnCrudOperation } from '../lib/types';
 
 
-class UserDB {
+export default class UserDB {
   dbNickName: string;
   user_database:Base
   private deta: DetaTypeFile.default;
