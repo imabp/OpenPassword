@@ -22,11 +22,13 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const USERdatabaseEntry:U_databaseEntry = {
             id: userid,
-            data: encoded_Userdata as string
+            datainJWT: encoded_Userdata as string,
+            U_datainplain:newUser
         }
         const VAULTdatabaseEntry:V_databaseEntry = {
             id:default_vault.vault_uuid,
-            data:encoded_Vaultdata as string
+            datainJWT:encoded_Vaultdata as string,
+            V_datainplain:default_vault
         }
 
         /**
